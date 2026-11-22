@@ -1,8 +1,8 @@
 import React from 'react';
-import { graphql, Link, PageProps } from 'gatsby';
-import { MDXProvider } from '@mdx-js/react';
 
-const shortcodes = { Link };
+import { graphql, PageProps } from 'gatsby';
+import { MDXProvider } from '@mdx-js/react';
+import { MDXComponents } from './mdxComponent';
 
 type DataProps = {
   mdx: {
@@ -15,8 +15,7 @@ type DataProps = {
 export default function PageTemplate({ data, children }: PageProps<DataProps>) {
   return (
     <>
-      <h1>{data.mdx.frontmatter.title}</h1>
-      <MDXProvider components={shortcodes}>{children}</MDXProvider>
+      <MDXProvider components={MDXComponents}>{children}</MDXProvider>
     </>
   );
 }
