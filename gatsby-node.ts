@@ -9,45 +9,35 @@ export const createPages: GatsbyNode['createPages'] = async ({
   const { createPage } = actions;
 
   const result = await graphql<{
-    allMdx: {
-      nodes: {
-        id: string;
-        frontmatter: {
-          slug: string;
-        };
-        internal: {
-          contentFilePath: string;
-        };
-      }[];
+    allMarkdownRemark: {
+      nodes: { id: string; fileAbsolutePath: string }[];
     };
   }>(`
     query {
-      allMdx {
+      allMarkdownRemark {
         nodes {
           id
-          frontmatter {
-            slug
-          }
-          internal {
-            contentFilePath
-          }
+          fileAbsolutePath
         }
       }
     }
   `);
 
   if (result.errors) {
-    reporter.panicOnBuild('Error loading MDX result', result.errors);
+    reporter.panicOnBuild('Error loading markdown result', result.errors);
     return;
   }
 
-  const posts = result.data!.allMdx.nodes;
   const postTemplate = path.resolve('src/templates/post.tsx');
 
-  posts.forEach((node) => {
+  result.data!.allMarkdownRemark.nodes.forEach((node) => {
+    const slug = path
+      .basename(node.fileAbsolutePath, '.md')
+      .replace(/\s+/g, '-');
+
     createPage({
-      path: node.frontmatter.slug,
-      component: `${postTemplate}?__contentFilePath=${node.internal.contentFilePath}`,
+      path: `/posts/${slug}`,
+      component: postTemplate,
       context: { id: node.id },
     });
   });

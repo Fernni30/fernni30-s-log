@@ -1,31 +1,22 @@
 import React from 'react';
-
 import { graphql, PageProps } from 'gatsby';
-import { MDXProvider } from '@mdx-js/react';
-import { MDXComponents } from './mdxComponent';
 
 type DataProps = {
-  mdx: {
-    frontmatter: {
-      title: string;
-    };
-  };
+  markdownRemark: { html: string };
 };
 
-export default function PageTemplate({ data, children }: PageProps<DataProps>) {
+export default function PageTemplate({ data }: PageProps<DataProps>) {
   return (
-    <>
-      <MDXProvider components={MDXComponents}>{children}</MDXProvider>
-    </>
+    <article className="prose prose-neutral mx-auto max-w-3xl px-4 py-10 sm:px-6">
+      <div dangerouslySetInnerHTML={{ __html: data.markdownRemark.html }} />
+    </article>
   );
 }
 
 export const query = graphql`
   query ($id: String!) {
-    mdx(id: { eq: $id }) {
-      frontmatter {
-        title
-      }
+    markdownRemark(id: { eq: $id }) {
+      html
     }
   }
 `;
