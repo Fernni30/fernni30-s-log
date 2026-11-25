@@ -1,6 +1,0 @@
----
-title: Blog Post 2
-slug: /blog-2
----
-
-# Gatsby is the best
