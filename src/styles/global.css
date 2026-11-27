@@ -1,2 +1,79 @@
-@import 'tailwindcss';
-@plugin "@tailwindcss/typography";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-bg font-sans text-fg;
+    word-break: keep-all;
+    overflow-wrap: anywhere;
+  }
+  :focus-visible {
+    @apply outline outline-2 outline-offset-2 outline-accent;
+  }
+}
+
+/* 마크다운 본문 */
+@layer components {
+  .prose-post {
+    @apply text-base leading-8;
+  }
+  .prose-post h1 {
+    @apply mt-12 mb-4 text-3xl text-accent;
+  }
+
+  .prose-post h2 {
+    @apply mt-12 mb-4 text-2xl text-accent;
+  }
+  .prose-post h3 {
+    @apply mt-8 mb-3 text-xl;
+  }
+  .prose-post h4 {
+    @apply mt-6 mb-2 text-lg text-accent-light;
+  }
+  .prose-post p {
+    @apply my-4;
+  }
+  .prose-post ul {
+    @apply my-4 list-disc pl-6;
+  }
+  .prose-post ol {
+    @apply my-4 list-decimal pl-6;
+  }
+  .prose-post a {
+    @apply text-accent underline;
+  }
+  .prose-post pre {
+    @apply my-6 overflow-x-auto rounded-xl bg-cover-black p-5 text-sm leading-7;
+  }
+  .prose-post :not(pre) > code {
+    @apply rounded bg-surface-soft px-1.5 py-0.5 text-sm;
+  }
+
+  .prose-post table {
+    @apply my-6 block w-fit max-w-full overflow-x-auto border-collapse text-sm;
+  }
+  .prose-post th,
+  .prose-post td {
+    @apply border border-surface-raised px-4 py-2;
+  }
+  .prose-post th {
+    @apply bg-surface-soft text-accent;
+  }
+  .prose-post th:not([align]),
+  .prose-post td:not([align]) {
+    @apply text-left;
+  }
+  .prose-post blockquote {
+    @apply my-6 rounded-r-xl border-l-4 border-accent bg-surface px-5 py-3 text-muted-soft;
+  }
+  .prose-post blockquote > :first-child {
+    @apply mt-0;
+  }
+  .prose-post blockquote > :last-child {
+    @apply mb-0;
+  }
+  .prose-post blockquote blockquote {
+    @apply my-3 bg-surface-soft;
+  }
+}
