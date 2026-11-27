@@ -18,8 +18,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22 # 로컬에서 빌드되는 버전(node -v)에 맞추세요
-      - run: npm ci
-      - run: npx gatsby build --prefix-paths
+      - run: corepack enable
+      - run: yarn install --frozen-lockfile
+      - run: yarn gatsby build --prefix-paths
       - uses: actions/upload-pages-artifact@v3
         with:
           path: public
