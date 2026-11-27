@@ -1,195 +1,77 @@
-import * as React from "react"
-import type { HeadFC, PageProps } from "gatsby"
+import * as React from 'react';
+import { graphql, type HeadFC, type PageProps } from 'gatsby';
 
-const pageStyles = {
-  color: "#232129",
-  padding: 96,
-  fontFamily: "-apple-system, Roboto, sans-serif, serif",
-}
-const headingStyles = {
-  marginTop: 0,
-  marginBottom: 64,
-  maxWidth: 320,
-}
-const headingAccentStyles = {
-  color: "#663399",
-}
-const paragraphStyles = {
-  marginBottom: 48,
-}
-const codeStyles = {
-  color: "#8A6534",
-  padding: 4,
-  backgroundColor: "#FFF4DB",
-  fontSize: "1.25rem",
-  borderRadius: 4,
-}
-const listStyles = {
-  marginBottom: 96,
-  paddingLeft: 0,
-}
-const doclistStyles = {
-  paddingLeft: 0,
-}
-const listItemStyles = {
-  fontWeight: 300,
-  fontSize: 24,
-  maxWidth: 560,
-  marginBottom: 30,
-}
+import type { PostMeta } from '../types';
+import PostCard from '../components/postcard';
+import Layout from '../components/layout';
+import Seo from '../components/seo';
 
-const linkStyle = {
-  color: "#8954A8",
-  fontWeight: "bold",
-  fontSize: 16,
-  verticalAlign: "5%",
-}
+type Data = { allMarkdownRemark: { nodes: { frontmatter: PostMeta }[] } };
 
-const docLinkStyle = {
-  ...linkStyle,
-  listStyleType: "none",
-  display: `inline-block`,
-  marginBottom: 24,
-  marginRight: 12,
-}
+// 모바일: 한 줄(contents로 풀어 order 정렬) / 데스크탑: 엇갈린 두 단
+const column = 'contents md:flex md:min-w-0 md:flex-1 md:flex-col md:gap-12';
 
-const descriptionStyle = {
-  color: "#232129",
-  fontSize: 14,
-  marginTop: 10,
-  marginBottom: 0,
-  lineHeight: 1.25,
-}
+const IndexPage = ({ data }: PageProps<Data>) => {
+  const posts = data.allMarkdownRemark.nodes.map((n, index) => ({
+    post: n.frontmatter,
+    index,
+  }));
 
-const docLinks = [
-  {
-    text: "TypeScript Documentation",
-    url: "https://www.gatsbyjs.com/docs/how-to/custom-configuration/typescript/",
-    color: "#8954A8",
-  },
-  {
-    text: "GraphQL Typegen Documentation",
-    url: "https://www.gatsbyjs.com/docs/how-to/local-development/graphql-typegen/",
-    color: "#8954A8",
-  },
-]
+  const cards = (parity: number) =>
+    posts
+      .filter(({ index }) => index % 2 === parity)
+      .map(({ post, index }) => (
+        <PostCard key={post.slug} post={post} index={index} />
+      ));
 
-const badgeStyle = {
-  color: "#fff",
-  backgroundColor: "#088413",
-  border: "1px solid #088413",
-  fontSize: 11,
-  fontWeight: "bold",
-  letterSpacing: 1,
-  borderRadius: 4,
-  padding: "4px 6px",
-  display: "inline-block",
-  position: "relative" as "relative",
-  top: -2,
-  marginLeft: 10,
-  lineHeight: 1,
-}
-
-const links = [
-  {
-    text: "Tutorial",
-    url: "https://www.gatsbyjs.com/docs/tutorial/getting-started/",
-    description:
-      "A great place to get started if you're new to web development. Designed to guide you through setting up your first Gatsby site.",
-    color: "#E95800",
-  },
-  {
-    text: "How to Guides",
-    url: "https://www.gatsbyjs.com/docs/how-to/",
-    description:
-      "Practical step-by-step guides to help you achieve a specific goal. Most useful when you're trying to get something done.",
-    color: "#1099A8",
-  },
-  {
-    text: "Reference Guides",
-    url: "https://www.gatsbyjs.com/docs/reference/",
-    description:
-      "Nitty-gritty technical descriptions of how Gatsby works. Most useful when you need detailed information about Gatsby's APIs.",
-    color: "#BC027F",
-  },
-  {
-    text: "Conceptual Guides",
-    url: "https://www.gatsbyjs.com/docs/conceptual/",
-    description:
-      "Big-picture explanations of higher-level Gatsby concepts. Most useful for building understanding of a particular topic.",
-    color: "#0D96F2",
-  },
-  {
-    text: "Plugin Library",
-    url: "https://www.gatsbyjs.com/plugins",
-    description:
-      "Add functionality and customize your Gatsby site or app with thousands of plugins built by our amazing developer community.",
-    color: "#8EB814",
-  },
-  {
-    text: "Build and Host",
-    url: "https://www.gatsbyjs.com/cloud",
-    badge: true,
-    description:
-      "Now you’re ready to show the world! Give your Gatsby site superpowers: Build and host on Netlify. Get started for free!",
-    color: "#663399",
-  },
-]
-
-const IndexPage: React.FC<PageProps> = () => {
   return (
-    <main style={pageStyles}>
-      <h1 style={headingStyles}>
-        Congratulations
-        <br />
-        <span style={headingAccentStyles}>
-          — you just made a Gatsby site! 🎉🎉🎉
-        </span>
-      </h1>
-      <p style={paragraphStyles}>
-        Edit <code style={codeStyles}>src/pages/index.tsx</code> to see this
-        page update in real-time. 😎
-      </p>
-      <ul style={doclistStyles}>
-        {docLinks.map(doc => (
-          <li key={doc.url} style={docLinkStyle}>
-            <a
-              style={linkStyle}
-              href={`${doc.url}?utm_source=starter&utm_medium=ts-docs&utm_campaign=minimal-starter-ts`}
-            >
-              {doc.text}
-            </a>
-          </li>
-        ))}
-      </ul>
-      <ul style={listStyles}>
-        {links.map(link => (
-          <li key={link.url} style={{ ...listItemStyles, color: link.color }}>
-            <span>
-              <a
-                style={linkStyle}
-                href={`${link.url}?utm_source=starter&utm_medium=start-page&utm_campaign=minimal-starter-ts`}
-              >
-                {link.text}
-              </a>
-              {link.badge && (
-                <span style={badgeStyle} aria-label="New Badge">
-                  NEW!
-                </span>
-              )}
-              <p style={descriptionStyle}>{link.description}</p>
-            </span>
-          </li>
-        ))}
-      </ul>
-      <img
-        alt="Gatsby G Logo"
-        src="data:image/svg+xml,%3Csvg width='24' height='24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 2a10 10 0 110 20 10 10 0 010-20zm0 2c-3.73 0-6.86 2.55-7.75 6L14 19.75c3.45-.89 6-4.02 6-7.75h-5.25v1.5h3.45a6.37 6.37 0 01-3.89 4.44L6.06 9.69C7 7.31 9.3 5.63 12 5.63c2.13 0 4 1.04 5.18 2.65l1.23-1.06A7.959 7.959 0 0012 4zm-8 8a8 8 0 008 8c.04 0 .09 0-8-8z' fill='%23639'/%3E%3C/svg%3E"
-      />
-    </main>
-  )
-}
+    <Layout>
+      <main className="mx-auto flex max-w-page flex-col gap-9 px-6 pb-14 pt-4 md:gap-14 md:px-12 md:pb-[72px] md:pt-10">
+        <div className="flex flex-col gap-9 md:flex-row md:items-start md:gap-14">
+          <div className={column}>
+            <div className="flex flex-col items-start gap-1">
+              <p className="font-hand text-[22px] font-bold text-muted">
+                오늘의 기록, 차곡차곡
+              </p>
+              <h1 className="text-[64px] leading-tight text-accent md:text-[120px]">
+                #Tech
+              </h1>
+              <span className="ml-10 inline-block -rotate-[4deg] rounded-full bg-fg px-7 py-1 text-3xl text-bg md:ml-24 md:text-[44px]">
+                #All
+              </span>
+            </div>
+            {cards(1)}
+          </div>
+          <div className={column}>{cards(0)}</div>
+        </div>
+        {posts.length === 0 && (
+          <p className="text-center text-muted">아직 작성한 글이 없어요.</p>
+        )}
+        <p className="text-center font-hand text-xl font-bold text-muted">
+          여기까지 읽어줘서 고마워요
+        </p>
+      </main>
+    </Layout>
+  );
+};
 
-export default IndexPage
+export default IndexPage;
 
-export const Head: HeadFC = () => <title>Home Page</title>
+export const Head: HeadFC = () => <Seo />;
+
+export const query = graphql`
+  query {
+    allMarkdownRemark(sort: { frontmatter: { date: DESC } }) {
+      nodes {
+        frontmatter {
+          slug
+          title
+          description
+          date(formatString: "YYYY.MM.DD")
+          tags
+          cover
+        }
+      }
+    }
+  }
+`;
