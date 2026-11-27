@@ -1,7 +1,6 @@
 import type { GatsbyConfig } from 'gatsby';
 
 const config: GatsbyConfig = {
-  pathPrefix: '/',
   siteMetadata: {
     title: 'fernni30s — Tech Blog',
     description: '오늘의 기록, 차곡차곡',

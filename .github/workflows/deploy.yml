@@ -20,7 +20,7 @@ jobs:
           node-version: 22 # 로컬에서 빌드되는 버전(node -v)에 맞추세요
       - run: corepack enable
       - run: yarn install --frozen-lockfile
-      - run: yarn gatsby build --prefix-paths
+      - run: yarn build
       - uses: actions/upload-pages-artifact@v3
         with:
           path: public
